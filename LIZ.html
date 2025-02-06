@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregunta de San Valentín</title>
+    
+    <!-- Enlace de la fuente Poppins desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Fuente por defecto para todo el cuerpo */
+        body {
+            background-color: pink;
+            font-family: Arial, sans-serif; /* Fuente básica para el resto */
+            text-align: center;
+            padding-top: 20%;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Estilo específico para la pregunta principal */
+        h1 {
+            font-family: 'Poppins', sans-serif; /* Fuente Poppins solo para la pregunta */
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            z-index: 20;
+            position: relative;
+        }
+
+        .button {
+            padding: 20px 40px;
+            font-size: 1.5em;
+            margin: 20px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .yes {
+            background-color: green;
+            color: white;
+        }
+
+        .no {
+            background-color: red;
+            color: white;
+        }
+
+        .message {
+            font-size: 1.8em;
+            color: white;
+            margin-top: 20px;
+            display: none;
+            z-index: 10;
+            position: relative;
+        }
+
+        .please-message {
+            position: absolute;
+            font-size: 1.5em;
+            color: white;
+            font-weight: bold;
+            display: none;
+            z-index: 1;
+        }
+
+        #finalImage {
+            display: none;
+            margin-top: 30px;
+            max-width: 80%;
+            border-radius: 15px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-size: cover;
+            animation: heartAnimation 2s infinite;
+            z-index: 1;
+        }
+
+        @keyframes heartAnimation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- La pregunta principal usa la fuente Poppins -->
+    <h1>¿Quieres ser mi San Valentín, Liz?</h1>
+
+    <button class="button yes" id="yesButton" onclick="handleYes()">SI</button>
+    <button class="button no" id="noButton" onclick="handleNo()">NO</button>
+
+    <p id="message" class="message">Sabía que dirías que sí. Te amo <3</p>
+
+    <img id="finalImage" src="https://live.staticflickr.com/65535/54310656886_7bb643d2b2.jpg" alt="Foto de nosotros">
+
+    <script>
+        let noCount = 0;
+        let yesClicked = false;
+        let yesScale = 1;
+        let noScale = 1;
+
+        function handleYes() {
+            if (!yesClicked) {
+                yesClicked = true;
+                document.getElementById("message").style.display = "block";
+                document.getElementById("yesButton").style.transform = `scale(${yesScale})`;
+                document.getElementById("noButton").disabled = true;
+
+                let pleaseMessages = document.querySelectorAll('.please-message');
+                pleaseMessages.forEach(message => message.remove());
+
+                document.getElementById("yesButton").style.display = "none";
+                document.getElementById("noButton").style.display = "none";
+
+                document.getElementById("finalImage").style.display = "block";
+
+                generateHearts();
+            }
+        }
+
+        function handleNo() {
+            if (yesClicked) return;
+
+            noCount++;
+
+            let pleaseMessage = document.createElement('div');
+            pleaseMessage.textContent = "Por favor :(";
+            pleaseMessage.classList.add('please-message');
+
+            let randomX = Math.random() * (window.innerWidth - 200);
+            let randomY = Math.random() * (window.innerHeight - 200);
+            let buttonHeight = document.getElementById('noButton').offsetHeight;
+            let finalImageHeight = document.getElementById('finalImage').offsetHeight;
+            let finalImageTop = window.innerHeight - finalImageHeight - 50;
+
+            while (randomY < buttonHeight || randomY > finalImageTop) {
+                randomX = Math.random() * (window.innerWidth - 200);
+                randomY = Math.random() * (window.innerHeight - 200);
+            }
+
+            pleaseMessage.style.left = `${randomX}px`;
+            pleaseMessage.style.top = `${randomY}px`;
+
+            document.body.appendChild(pleaseMessage);
+            pleaseMessage.style.display = 'block';
+
+            noScale *= 0.8;
+            yesScale *= 1.1;
+
+            document.getElementById("noButton").style.transform = `scale(${noScale})`;
+            document.getElementById("yesButton").style.transform = `scale(${yesScale})`;
+
+            setTimeout(() => {
+                document.getElementById("yesButton").style.transform = `scale(${yesScale})`;
+            }, 100);
+        }
+
+        function generateHearts() {
+            let heartCount = 20;
+            for (let i = 0; i < heartCount; i++) {
+                let heart = document.createElement('img');
+                heart.classList.add('heart');
+                heart.src = 'https://images.vexels.com/media/users/3/136172/isolated/preview/148ec098a4529de7141003a8ec519d39-corazon-como-icono.png';
+
+                let randomX = Math.random() * (window.innerWidth - 50);
+                let randomY = Math.random() * (window.innerHeight - 50);
+                let buttonHeight = document.getElementById('noButton').offsetHeight;
+                let finalImageHeight = document.getElementById('finalImage').offsetHeight;
+                let finalImageTop = window.innerHeight - finalImageHeight - 50;
+
+                while (randomY < buttonHeight || randomY > finalImageTop) {
+                    randomX = Math.random() * (window.innerWidth - 50);
+                    randomY = Math.random() * (window.innerHeight - 50);
+                }
+
+                heart.style.left = `${randomX}px`;
+                heart.style.top = `${randomY}px`;
+
+                document.body.appendChild(heart);
+            }
+        }
+    </script>
+
+</body>
+</html>
